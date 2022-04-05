@@ -1,4 +1,4 @@
-package top.zxl.rpc.transport;
+package top.zxl.rpc.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +23,7 @@ public class RequestHandler {
         try {
             result = invokeTargetMethod(rpcRequest, service);
             logger.info("服务:{}成功调用方法:{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
+            logger.info("服务器调用方法后得到的结果为：{}", result);
         } catch (IllegalAccessException | InvocationTargetException e ) {
             logger.error("调用或发送时有错误发生", e );
         }

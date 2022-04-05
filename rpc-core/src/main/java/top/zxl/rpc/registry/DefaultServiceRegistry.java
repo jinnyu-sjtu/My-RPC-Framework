@@ -17,10 +17,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultServiceRegistry implements ServiceRegistry{
     private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
 
-    //服务名与提供服务的对象的对应关系保存在一个 ConcurrentHashMap 中
-    private final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
+    //服务名与提供服务的实现类的对应关系保存在一个 ConcurrentHashMap 中
+    private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
     // Set 来保存当前有哪些对象已经被注册
-    private final Set<String> registeredService = ConcurrentHashMap.newKeySet();
+    private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
 
     @Override

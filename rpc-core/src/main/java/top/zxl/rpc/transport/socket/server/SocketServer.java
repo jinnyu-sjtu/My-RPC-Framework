@@ -1,4 +1,4 @@
-package top.zxl.rpc.transport;
+package top.zxl.rpc.transport.socket.server;
 
 /**
  * @Author zxl
@@ -8,21 +8,16 @@ package top.zxl.rpc.transport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.zxl.rpc.entity.RpcRequest;
-import top.zxl.rpc.entity.RpcResponse;
+import top.zxl.rpc.handler.RequestHandler;
 import top.zxl.rpc.registry.ServiceRegistry;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
-public class RpcServer {
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+public class SocketServer {
+    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
 
     private static final int CORE_POOL_SIZE = 5;
     private static final int MAXIMUM_POOL_SIZE = 50;
@@ -33,7 +28,7 @@ public class RpcServer {
     private final ServiceRegistry serviceRegistry;
 
     //创建服务器对象的时候，传入服务注册表，并建立线程池
-    public RpcServer(ServiceRegistry serviceRegistry) {
+    public SocketServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
@@ -46,7 +41,7 @@ public class RpcServer {
             Socket socket;
             while((socket = serverSocket.accept()) != null) {
                 logger.info("消费者连接: {}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry));
+                threadPool.execute(new SocketRequestHandlerThread(socket, requestHandler, serviceRegistry));
             }
             threadPool.shutdown();
         } catch (IOException e) {

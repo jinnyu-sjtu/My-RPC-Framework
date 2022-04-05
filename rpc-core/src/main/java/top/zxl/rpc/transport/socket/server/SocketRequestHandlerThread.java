@@ -1,9 +1,10 @@
-package top.zxl.rpc.transport;
+package top.zxl.rpc.transport.socket.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.zxl.rpc.entity.RpcRequest;
 import top.zxl.rpc.entity.RpcResponse;
+import top.zxl.rpc.handler.RequestHandler;
 import top.zxl.rpc.registry.ServiceRegistry;
 
 import java.io.IOException;
@@ -17,8 +18,8 @@ import java.net.Socket;
  * @Date 2022/4/4 14:23
  * @Version 1.0
  */
-public class RequestHandlerThread implements Runnable{
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandlerThread.class);
+public class SocketRequestHandlerThread implements Runnable{
+    private static final Logger logger = LoggerFactory.getLogger(SocketRequestHandlerThread.class);
 
     private Socket socket;
     //通过反射进行方法调用
@@ -26,7 +27,7 @@ public class RequestHandlerThread implements Runnable{
     //接口&服务注册表
     private ServiceRegistry serviceRegistry;
 
-    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceRegistry serviceRegistry) {
+    public SocketRequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceRegistry serviceRegistry) {
         this.socket = socket;
         this.requestHandler = requestHandler;
         this.serviceRegistry = serviceRegistry;
@@ -47,7 +48,7 @@ public class RequestHandlerThread implements Runnable{
             //进行处理并得到返回结果
             logger.info("服务器将处理收到的请求：{}", rpcRequest.toString());
             Object result = requestHandler.handle(rpcRequest, service);
-            objectOutputStream.writeObject(RpcResponse.success(result));
+            objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
             logger.error("调用或发送时有错误发生：", e);
