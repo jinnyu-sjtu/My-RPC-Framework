@@ -2,6 +2,7 @@ package top.zxl.rpc.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -19,6 +20,7 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 //注意这个对象需要实现Serializable接口，因为它需要在调用过程中从客户端传递给服务端，需要序列化
 public class HelloObject implements Serializable {
     private Integer id;
