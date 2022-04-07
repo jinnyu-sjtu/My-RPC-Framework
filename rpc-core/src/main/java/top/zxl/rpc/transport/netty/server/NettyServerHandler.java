@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import top.zxl.rpc.entity.RpcRequest;
 import top.zxl.rpc.entity.RpcResponse;
 import top.zxl.rpc.handler.RequestHandler;
-import top.zxl.rpc.registry.DefaultServiceRegistry;
-import top.zxl.rpc.registry.ServiceRegistry;
+import top.zxl.rpc.provider.ServiceProviderImpl;
+import top.zxl.rpc.provider.ServiceProvider;
 
 /**
  * @Author zxl
@@ -22,11 +22,11 @@ import top.zxl.rpc.registry.ServiceRegistry;
 public class NettyServerHandler extends SimpleChannelInboundHandler {
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
     private static RequestHandler requestHandler;
-    private static ServiceRegistry serviceRegistry;
+    private static ServiceProvider serviceRegistry;
 
     static {
         requestHandler = new RequestHandler();
-        serviceRegistry = new DefaultServiceRegistry();
+        serviceRegistry = new ServiceProviderImpl();
     }
 
     @Override

@@ -1,10 +1,9 @@
 package top.zxl.test;
 
 import top.zxl.rpc.api.HelloService;
-import top.zxl.rpc.registry.DefaultServiceRegistry;
-import top.zxl.rpc.registry.ServiceRegistry;
+import top.zxl.rpc.provider.ServiceProviderImpl;
+import top.zxl.rpc.provider.ServiceProvider;
 import top.zxl.rpc.transport.socket.server.SocketServer;
-import top.zxl.test.HelloServiceImpl;
 
 /**
  * @Author zxl
@@ -26,13 +25,13 @@ public class SocketTestServer {
         //服务
         HelloService helloService = new HelloServiceImpl();  //这是创建了一个对象
         //新建一个注册器
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
+        ServiceProvider serviceRegistry = new ServiceProviderImpl();
         //把helloservice注册到注册器
-        serviceRegistry.register(helloService);
+        serviceRegistry.addServiceProvider(helloService);
         //启动一个服务器
         SocketServer rpcServer = new SocketServer(serviceRegistry);
         //开启9000端口进行监听
-        rpcServer.start(9000);
+        rpcServer.start();
     }
 
 }

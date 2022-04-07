@@ -14,7 +14,10 @@ import top.zxl.rpc.transport.netty.client.NettyClient;
 public class NettyTestClient {
 
     public static void main(String[] args) {
-        RpcClient client = new NettyClient("127.0.0.1", 9999);
+        //这需要客户端知道服务端的ip地址，才能建立连接进行远程调用
+
+        //现在直接不用了，而是从nacos种查找相应的用户ip
+        RpcClient client = new NettyClient();
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12, "This is a message");

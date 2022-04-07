@@ -1,4 +1,4 @@
-package top.zxl.rpc.registry;
+package top.zxl.rpc.provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2022/4/4 13:31
  * @Version 1.0
  */
-public class DefaultServiceRegistry implements ServiceRegistry{
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
+public class ServiceProviderImpl implements ServiceProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
 
     //服务名与提供服务的实现类的对应关系保存在一个 ConcurrentHashMap 中
     private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
@@ -24,7 +24,7 @@ public class DefaultServiceRegistry implements ServiceRegistry{
 
 
     @Override
-    public <T> void register(T service) {
+    public <T> void addServiceProvider(T service) {
         //getCanonicalName()就是取一个更见名思意的名称
         String serviceName = service.getClass().getCanonicalName();
         //如果服务注册了就直接返回

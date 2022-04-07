@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import top.zxl.rpc.entity.RpcRequest;
 import top.zxl.rpc.entity.RpcResponse;
 import top.zxl.rpc.handler.RequestHandler;
-import top.zxl.rpc.registry.ServiceRegistry;
+import top.zxl.rpc.provider.ServiceProvider;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -25,9 +25,9 @@ public class SocketRequestHandlerThread implements Runnable{
     //通过反射进行方法调用
     private RequestHandler requestHandler;
     //接口&服务注册表
-    private ServiceRegistry serviceRegistry;
+    private ServiceProvider serviceRegistry;
 
-    public SocketRequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceRegistry serviceRegistry) {
+    public SocketRequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceProvider serviceRegistry) {
         this.socket = socket;
         this.requestHandler = requestHandler;
         this.serviceRegistry = serviceRegistry;

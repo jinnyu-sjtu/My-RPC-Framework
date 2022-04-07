@@ -6,6 +6,10 @@ package top.zxl.rpc.serializer;
  * @Version 1.0
  */
 public interface CommonSerializer {
+
+    Integer KRYO_SERIALIZER = 0;
+    Integer JSON_SERIALIZER = 1;
+
     //序列化
     byte[] serialize(Object obj);
 

@@ -1,6 +1,7 @@
 package top.zxl.rpc;
 
 import top.zxl.rpc.entity.RpcRequest;
+import top.zxl.rpc.serializer.CommonSerializer;
 
 /**
  * 为了保证通用性，把 Client 抽象成接口
@@ -9,5 +10,8 @@ import top.zxl.rpc.entity.RpcRequest;
  * @Version 1.0
  */
 public interface RpcClient {
+
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
+
     Object sendRequest(RpcRequest rpcRequest);
 }

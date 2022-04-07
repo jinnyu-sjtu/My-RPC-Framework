@@ -1,10 +1,8 @@
 package top.zxl.test;
 
-import top.zxl.rpc.RpcServer;
 import top.zxl.rpc.api.HelloService;
-import top.zxl.rpc.registry.DefaultServiceRegistry;
-import top.zxl.rpc.registry.ServiceRegistry;
-import top.zxl.rpc.serializer.CommonSerializer;
+import top.zxl.rpc.provider.ServiceProviderImpl;
+import top.zxl.rpc.provider.ServiceProvider;
 import top.zxl.rpc.transport.netty.server.NettyServer;
 
 /**
@@ -15,10 +13,14 @@ import top.zxl.rpc.transport.netty.server.NettyServer;
 public class NettyTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry registry = new DefaultServiceRegistry();
+//        ServiceProvider registry = new ServiceProviderImpl();
         //注册服务，服务注册表是类变量，是唯一的
-        registry.register(helloService);
-        NettyServer server = new NettyServer();
-        server.start(9999);
+//        registry.addServiceProvider(helloService);
+//        NettyServer server = new NettyServer();
+//        server.start(9999);
+
+        NettyServer server = new NettyServer("127.0.0.1", 9999, 0);  //序列化方法编号0
+        server.publishService(helloService, HelloService.class);
+
     }
 }

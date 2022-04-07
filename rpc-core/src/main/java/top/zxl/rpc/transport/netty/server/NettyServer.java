@@ -12,10 +12,18 @@ import org.slf4j.LoggerFactory;
 import top.zxl.rpc.RpcServer;
 import top.zxl.rpc.encoder.CommonDecoder;
 import top.zxl.rpc.encoder.CommonEncoder;
-import top.zxl.rpc.serializer.JsonSerializer;
+import top.zxl.rpc.enumeration.RpcError;
+import top.zxl.rpc.exception.RpcException;
+import top.zxl.rpc.provider.ServiceProvider;
+import top.zxl.rpc.provider.ServiceProviderImpl;
+import top.zxl.rpc.registry.NacosServiceRegistry;
+import top.zxl.rpc.registry.ServiceRegistry;
+import top.zxl.rpc.serializer.CommonSerializer;
 import top.zxl.rpc.serializer.KryoSerializer;
 
-/**
+import java.net.InetSocketAddress;
+
+/** NIO方式服务提供侧
  * @Author zxl
  * @Date 2022/4/4 20:13
  * @Version 1.0
@@ -23,8 +31,33 @@ import top.zxl.rpc.serializer.KryoSerializer;
 public class NettyServer implements RpcServer {
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
+    private String host;
+    private int port;
+    private ServiceRegistry serviceRegistry;
+    private ServiceProvider serviceProvider;
+    private final CommonSerializer serializer;
+
+    public NettyServer(String host, int port, Integer serializer) {
+        this.host = host;
+        this.port = port;
+        serviceRegistry = new NacosServiceRegistry();  //Nacos提供服务器注册服务
+        serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
+    }
+
     @Override
-    public void start(int port) {
+    public <T> void publishService(Object service, Class<T> serviceClass) {
+        if (serializer == null) {
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
+        serviceProvider.addServiceProvider(service);
+        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        start();
+    }
+
+    @Override
+    public void start() {
         //负责处理连接，连接到来，马上按照策略将 SocketChannel 转发给 WorkerEventLoopGroup
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         //会由 next 选择其中一个 EventLoop 来将这 个SocketChannel 注册到其维护的 Selector 并对其后续的 IO 事件进行处理。
